@@ -1,37 +1,36 @@
 package br.com.reclamabus.modelos;
 
-import java.io.IOException;
 import java.util.Scanner;
-public class PublicoGeral {
+public class PublicoGeral { //SuperClasse nomeada de PublicoGeral com os atributos comuns para ademais Classes
     private String nome;
     private int idade;
     private String telefone;
     private String senha;
 
-    public void criarConta(){
+    public void criarConta(){ //Método CriarConta, onde será exibido ao usuário o passo a passo de como criar a sua conta
         Scanner sc = new Scanner(System.in);
         System.out.print("Insira seu nome: ");
-        setNome(sc.next());
+        setNome(sc.next()); //Definição do nome do usuario
         System.out.print("Insira sua idade: ");
-        setIdade(sc.nextInt());
+        setIdade(sc.nextInt()); //Definição da idade do usuario
         System.out.print("Insira seu telefone (sem espaços): ");
-        setTelefone(sc.next());
+        setTelefone(sc.next()); //Definição do telefone do usuario
         System.out.print("Insira sua senha (+ 6 caracteres): ");
-        setSenha(sc.next());
+        setSenha(sc.next()); //Definição da senha do usuario
         System.out.print("Conta criada! Insira 0 para retornar ao menu: ");
         int voltar = sc.nextInt();
         if(voltar == 0){
             exibeMenu();
         }else{
             while(voltar != 0) {
-                System.out.print("Insira 0 para retornar ao menu:");
+                System.out.print("Insira 0 para retornar ao menu:"); //Loop criado com objetivo da funcionalidade de retorno
                 voltar = sc.nextInt();
             }
         sc.close();
         }
     }
 
-    public void exibeConta(){
+    public void exibeConta(){ //Método ExibeConta, onde exibirá na tela do usuário a sua conta cadastrada
         Scanner sc = new Scanner(System.in);
         System.out.println("Nome: "+getNome());
         System.out.println("Idade: "+getIdade());
@@ -56,7 +55,7 @@ public class PublicoGeral {
 
     }
 
-    public void exibeMenu() {
+    public void exibeMenu() { //Método exibeMenu, onde exibirá na tela do usuário as opções de funcionalidade do ReclamaBus
         Scanner sc = new Scanner(System.in);
         System.out.println(
                 """
@@ -87,7 +86,7 @@ public class PublicoGeral {
         }
         sc.close();
     }
-    public String getNome(){
+    public String getNome(){ //getter e setter dos atributos da SuperClasse PublicoGeral (nome, idade, telefone e senha)
         return nome;
     }
     public void setNome(String nome){
