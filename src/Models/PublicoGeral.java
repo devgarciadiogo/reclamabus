@@ -1,6 +1,10 @@
 package Models;
 
 import Data.DbContext;
+
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Scanner;
@@ -37,7 +41,15 @@ public class PublicoGeral { //SuperClasse nomeada de PublicoGeral com os atribut
         }
 
         System.out.print("Insira o seu e-mail: ");
-
+        setEmail(sc.next());
+        try {
+            boolean status = db.executarUpdateSql("INSERT INTO public.usuarios(email) VALUES ('"+this.email+"')");
+            if (status){
+                System.out.print("E-mail registrado!");
+            }
+        }catch (Exception e){
+            System.out.println("Erro na inserção no banco de dados!");
+        }
 
         System.out.print("Insira sua idade: ");
         while(true){
@@ -218,6 +230,7 @@ public class PublicoGeral { //SuperClasse nomeada de PublicoGeral com os atribut
         }catch(Exception e){
             System.out.println("Erro na inserção no banco de dados!");              
         }
+
         System.out.print("""
         Insira a categoria da ocorrência:
 
@@ -227,13 +240,59 @@ public class PublicoGeral { //SuperClasse nomeada de PublicoGeral com os atribut
         4) Acessibilidade (Manutenção de equipamento)
         5) Acessibilidade (Falta de preparo do funcionário)
         6) Direção perigosa
-        7) 
-                """);
+        
+        Opção escolhida: """);
+        esc = sc.next();
+        try { 
+            switch(esc){
+                case "1" -> db.executarUpdateSql("INSERT INTO public.ocorrencias(categoria) VALUES ('atraso')");
+                case "2" -> db.executarUpdateSql("INSERT INTO public.ocorrencias(categoria) VALUES ('higiene')");
+                case "3" -> db.executarUpdateSql("INSERT INTO public.ocorrencias(categoria) VALUES ('lotacao')");
+                case "4" -> db.executarUpdateSql("INSERT INTO public.ocorrencias(categoria) VALUES ('acessibilidade1')");
+                case "5" -> db.executarUpdateSql("INSERT INTO public.ocorrencias(categoria) VALUES ('acessibilidade2')");
+                case "6" -> db.executarUpdateSql("INSERT INTO public.ocorrencias(categoria) VALUES ('direcaoPerigosa')");
+            }
+            System.out.println("Categoria registrado!");
+        }catch(Exception e){
+            System.out.println("Erro na inserção no banco de dados!");              
+        }
+
+        System.out.println("Caso queira, dê mais detalhes sobre a situação em si (limite de 300 caracteres):");
+        String detalhes = sc.next();
+        try{
+        db.executarQuerySql("INSERT INTO public.ocorrencias(detalhes) VALUES ('"+detalhes+"')");
+        }catch(Exception e){
+            System.out.println("Erro na inserção no banco de dados!");
+        }
+        System.out.println("Ocorrência registrada! Insira 0 para retornar ao Menu Principal: ");
+        int voltar = sc.nextInt();
+        while(true){
+        if(voltar != 0){
+            System.out.println("Insira 0 para retornar ao Menu Principal: ");
+            voltar = sc.nextInt();
+        }else{
+            System.out.flush();
+            menuPrincipal();
+            break;
+        }
+        }
         sc.close();
+        db.desconectarBanco();
     }
 
     public void exibirOcorrencia(){
 
+    }
+
+    public byte[] criptografarSenha(String senha){
+        byte[] senhaBytes = senha.getBytes(StandardCharsets.UTF_8);
+        byte[] senhaCripto;
+        try{
+            senhaCripto = MessageDigest.getInstance("SHA-256").dist(senhaBytes);
+        } catch(NoSuchAlgorithmException e) {
+            System.out.println("Erro na criptografia!");
+        }        
+        return senhaCripto;
     }
 
     public void exibeMenu(){
@@ -278,7 +337,7 @@ public class PublicoGeral { //SuperClasse nomeada de PublicoGeral com os atribut
         db.conectarBanco();
         System.out.print("Insira seu nome");
         
-        ResultSet rs = db.executarQuerySql("SELECT nome FROM public.reclamabus");
+        ResultSet rs = db.executarQuerySql("SELECT nome FROM public.reclamabus(nome)");
 
         db.desconectarBanco();
     }
@@ -323,9 +382,9 @@ public class PublicoGeral { //SuperClasse nomeada de PublicoGeral com os atribut
     }
 
     public String getEmail(){
-
+        return email;
     }
-    public void setEmail(){
+    public void setEmail(String email){
         this.email = email;
     }
     public int getIdade(){
@@ -370,4 +429,3 @@ public class PublicoGeral { //SuperClasse nomeada de PublicoGeral com os atribut
         this.funcionario = funcionario;
     }
 }
-//
