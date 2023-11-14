@@ -7,12 +7,13 @@ import java.util.Scanner;
 
 public class PublicoGeral { //SuperClasse nomeada de PublicoGeral com os atributos comuns para ademais Classes
     private String nome;
+    private String email;
     private int idade;
     private String telefone;
     private String senha;
-    private boolean idoso;
-    private boolean pcd;
-    private boolean funcionario;
+    private String idoso;
+    private String pcd;
+    private String funcionario;
 
     //Método CriarConta, onde será exibido ao usuário o passo a passo de como criar a sua conta
     public void criarConta(){
@@ -27,13 +28,16 @@ public class PublicoGeral { //SuperClasse nomeada de PublicoGeral com os atribut
         System.out.print("Insira seu nome: ");
         setNome(sc.next()); //Definição do nome do usuario
         try {
-            boolean status = db.executarUpdateSql("INSERT INTO public.reclamabus(nome) VALUES ('"+this.nome+"')");
+            boolean status = db.executarUpdateSql("INSERT INTO public.usuarios(nome) VALUES ('"+this.nome+"')");
             if (status){
                 System.out.print("Nome registrado!");
             }
         }catch (Exception e){
             System.out.println("Erro na inserção no banco de dados!");
         }
+
+        System.out.print("Insira o seu e-mail: ");
+
 
         System.out.print("Insira sua idade: ");
         while(true){
@@ -42,6 +46,11 @@ public class PublicoGeral { //SuperClasse nomeada de PublicoGeral com os atribut
                 while(idade < 0 || idade > 120){
                     System.out.print("Por favor, insira uma idade válida: ");
                     setIdade(sc.nextInt());
+                    if(idade >= 60){
+                        this.idoso = "Sim";
+                    }else{
+                        this.idoso = "Não";
+                    }
                 }
                 break;
             }catch (Exception InputMismatchException){
@@ -49,7 +58,7 @@ public class PublicoGeral { //SuperClasse nomeada de PublicoGeral com os atribut
             }
         }
         try {
-            boolean status = db.executarUpdateSql("INSERT INTO public.reclamabus(idade) VALUES ('"+this.idade+"')");
+            boolean status = db.executarUpdateSql("INSERT INTO public.usuarios(idade) VALUES ('"+this.idade+"')");
             if (status) {
                 System.out.print("Idade registrada!");
             }
@@ -67,6 +76,52 @@ public class PublicoGeral { //SuperClasse nomeada de PublicoGeral com os atribut
             boolean status = db.executarUpdateSql("INSERT INTO public.usuarios(telefone) VALUES ('"+this.telefone+"')");
             if (status) {
                 System.out.print("Telefone registrada!");
+            }
+        }catch (Exception e){
+            System.out.println("Erro na inserção no banco de dados!");
+        }
+
+        while(true){
+            System.out.print("Você é PCD [S/N]? ");
+            String esc = sc.next();
+            esc.toUpperCase();
+            if(esc == "S"){
+                this.pcd = "Sim";
+                break;
+            }else if(esc == "N"){
+                this.pcd = "Não";
+                break;
+            }else{
+                System.out.println("Insira uma opção válida!");
+            }
+        }
+        try {
+            boolean status = db.executarUpdateSql("INSERT INTO public.usuarios(pcd) VALUES ('"+this.pcd+"')");
+            if (status) {
+                System.out.print("Registrado!");
+            }
+        }catch (Exception e){
+            System.out.println("Erro na inserção no banco de dados!");
+        }
+
+        while(true){
+            System.out.print("Você é funcionário de transporte público [S/N]? ");
+            String esc = sc.next();
+            esc.toUpperCase();
+            if(esc == "S"){
+                this.funcionario = "Sim";
+                break;
+            }else if(esc == "N"){
+                this.funcionario = "Não";
+                break;
+            }else{
+                System.out.println("Insira uma opção válida!");
+            }
+        }
+        try {
+            boolean status = db.executarUpdateSql("INSERT INTO public.usuarios(funcionario) VALUES ('"+this.funcionario+"')");
+            if (status) {
+                System.out.print("Registrado!");
             }
         }catch (Exception e){
             System.out.println("Erro na inserção no banco de dados!");
@@ -102,7 +157,7 @@ public class PublicoGeral { //SuperClasse nomeada de PublicoGeral com os atribut
 
     public void exibeConta(){ //Método ExibeConta, onde exibirá na tela do usuário a sua conta cadastrada
         Scanner sc = new Scanner(System.in);
-        //System.out.println("Nome: "+getNome());
+        System.out.println("Nome: "+getNome());
         System.out.println("Idade: "+getIdade());
         System.out.println("Telefone: "+getTelefone());
         System.out.println("Idoso? "+getIdoso());
@@ -125,11 +180,55 @@ public class PublicoGeral { //SuperClasse nomeada de PublicoGeral com os atribut
 
     public void criarOcorrencia(){
         Scanner sc = new Scanner(System.in);
+        DbContext db = new DbContext();
+        db.conectarBanco();
+        System.out.print("Insira a linha correspondente do veículo da ocorrência: ");
+        String linha = sc.next();
+        linha.toUpperCase();
+        try {
+            boolean status = db.executarUpdateSql("INSERT INTO public.ocorrencias(linha) VALUES ('"+linha+"')");
+            if (status) {
+                System.out.print("Linha registrada!");
+            }
+        }catch (Exception e){
+            System.out.println("Erro na inserção no banco de dados!");
+        }
         System.out.print("""
-        Insira o período do dia da ocorrência:
-            
-        1) 
-        2)  """);
+        Insira o período da ocorrência:
+        
+        1) Entre 04:00 e 06:59
+        2) Entre 07:00 e 10:29
+        3) Entre 10:30 e 11:59
+        4) Entre 12:00 e 16:59
+        5) Entre 17:00 e 20:59
+        6) Entre 21:00 e 03:59
+
+        Opção escolhida: """);
+        String esc = sc.next();
+        try { 
+            switch(esc){
+                case "1" -> db.executarUpdateSql("INSERT INTO public.ocorrencias(horario) VALUES ('04:00-06:59')");
+                case "2" -> db.executarUpdateSql("INSERT INTO public.ocorrencias(horario) VALUES ('07:00-10:29')");
+                case "3" -> db.executarUpdateSql("INSERT INTO public.ocorrencias(horario) VALUES ('10:30-11:59')");
+                case "4" -> db.executarUpdateSql("INSERT INTO public.ocorrencias(horario) VALUES ('12:00-16:59')");
+                case "5" -> db.executarUpdateSql("INSERT INTO public.ocorrencias(horario) VALUES ('17:00-20:59')");
+                case "6" -> db.executarUpdateSql("INSERT INTO public.ocorrencias(horario) VALUES ('21:00-03:59')");
+            }
+            System.out.println("Horário registrado!");
+        }catch(Exception e){
+            System.out.println("Erro na inserção no banco de dados!");              
+        }
+        System.out.print("""
+        Insira a categoria da ocorrência:
+
+        1) Atraso
+        2) Higiene
+        3) Lotação
+        4) Acessibilidade (Manutenção de equipamento)
+        5) Acessibilidade (Falta de preparo do funcionário)
+        6) Direção perigosa
+        7) 
+                """);
         sc.close();
     }
 
@@ -177,6 +276,8 @@ public class PublicoGeral { //SuperClasse nomeada de PublicoGeral com os atribut
     public void checkLogin(String name, String pass){
         DbContext db = new DbContext();
         db.conectarBanco();
+        System.out.print("Insira seu nome");
+        
         ResultSet rs = db.executarQuerySql("SELECT nome FROM public.reclamabus");
 
         db.desconectarBanco();
@@ -208,19 +309,25 @@ public class PublicoGeral { //SuperClasse nomeada de PublicoGeral com os atribut
         sc.close();
     }
     //'getter' e 'setter' dos atributos da SuperClasse PublicoGeral (nome, idade, telefone e senha)
-    /*public String getNome(){
+    public String getNome(){
         DbContext db = new DbContext();
-        ResultSet rs = db.executarQuerySql("SELECT nome FROM public.reclamabus");
+        ResultSet rs = db.executarQuerySql("SELECT nome FROM public.reclamabus(nome)");
         while(rs.next()){
             nome = rs.getString(nome);
         }
         db.desconectarBanco();
         return nome;
-    }*/
+    }
     public void setNome(String nome){
         this.nome = nome;
     }
 
+    public String getEmail(){
+
+    }
+    public void setEmail(){
+        this.email = email;
+    }
     public int getIdade(){
         return idade;
     }
@@ -243,41 +350,24 @@ public class PublicoGeral { //SuperClasse nomeada de PublicoGeral com os atribut
     }
 
     public String getIdoso(){
-        if(idoso == true){
-            String sim = "Sim";
-            return sim;
-        }else{
-            String nao = "Não";
-            return nao;
-        }
+        return idoso;
     }
-    public void setIdoso(){
+    public void setIdoso(String idoso){
         this.idoso = idoso;
     }
 
     public String getPCD(){
-        if (pcd == true){
-            String sim = "Sim";
-            return sim;
-        }else{
-            String nao = "Não";
-            return nao;
-        }
+        return pcd;
     }
     public void setPCD(){
         this.pcd = pcd;
     }
 
     public String getFuncionario(){
-        if (pcd == true){
-            String sim = "Sim";
-            return sim;
-        }else{
-            String nao = "Não";
-            return nao;
-        }
+        return funcionario;
     }
     public void setFuncionario(){
         this.funcionario = funcionario;
     }
 }
+//

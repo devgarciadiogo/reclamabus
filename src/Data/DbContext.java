@@ -9,7 +9,7 @@ public class DbContext {
 
     private String url = "jdbc:postgresql://localhost:5432/reclamabus";
     private String usuario = "postgres";
-    private String senha = "artesanato2015";
+    private String senha = "libra8241";
 
     public Connection connection = null;
 
@@ -67,3 +67,4 @@ public class DbContext {
         }
     }
 }
+//
