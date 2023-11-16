@@ -4,12 +4,12 @@ import Data.DbContext;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Scanner;
 
-public class PublicoGeral { //SuperClasse nomeada de PublicoGeral com os atributos comuns para ademais Classes
+public class PublicoGeral {
     private String nome;
     private String email;
     private int idade;
@@ -81,7 +81,7 @@ public class PublicoGeral { //SuperClasse nomeada de PublicoGeral com os atribut
         System.out.print("Insira seu telefone (sem espaços): ");
         setTelefone(sc.next()); //Definição do telefone do usuario
         while(telefone.length() != 11){
-            System.out.print("Insira uma telefone válido: ");
+            System.out.print("Insira um telefone válido: ");
             setTelefone(sc.next());
         }
         try {
@@ -167,7 +167,7 @@ public class PublicoGeral { //SuperClasse nomeada de PublicoGeral com os atribut
         }
     }
 
-    public void exibeConta(){ //Método ExibeConta, onde exibirá na tela do usuário a sua conta cadastrada
+    public void exibeConta() throws SQLException{ //Método ExibeConta, onde exibirá na tela do usuário a sua conta cadastrada
         Scanner sc = new Scanner(System.in);
         System.out.println("Nome: "+getNome());
         System.out.println("Idade: "+getIdade());
@@ -190,7 +190,7 @@ public class PublicoGeral { //SuperClasse nomeada de PublicoGeral com os atribut
         sc.close();
     }
 
-    public void criarOcorrencia(){
+    public void criarOcorrencia() throws SQLException{
         Scanner sc = new Scanner(System.in);
         DbContext db = new DbContext();
         db.conectarBanco();
@@ -281,15 +281,18 @@ public class PublicoGeral { //SuperClasse nomeada de PublicoGeral com os atribut
     }
 
     public void exibirOcorrencia(){
+        System.out.println("""
+                
+                """);
 
     }
 
     public byte[] criptografarSenha(String senha){
         byte[] senhaBytes = senha.getBytes(StandardCharsets.UTF_8);
-        byte[] senhaCripto;
+        byte[] senhaCripto = null;
         try{
-            senhaCripto = MessageDigest.getInstance("SHA-256").dist(senhaBytes);
-        } catch(NoSuchAlgorithmException e) {
+            senhaCripto = MessageDigest.getInstance("SHA-256").digest(senhaBytes);
+        } catch(Exception e) {
             System.out.println("Erro na criptografia!");
         }        
         return senhaCripto;
@@ -342,7 +345,7 @@ public class PublicoGeral { //SuperClasse nomeada de PublicoGeral com os atribut
         db.desconectarBanco();
     }
 
-    public void menuPrincipal() { //Método exibeMenu, onde exibirá na tela do usuário as opções de funcionalidade do ReclamaBus
+    public void menuPrincipal() throws SQLException { //Método menuPrincipal, onde exibirá na tela do usuário as opções de funcionalidade do ReclamaBus
         Scanner sc = new Scanner(System.in);
         System.out.print("""
         Bem-vindo à sua conta!
@@ -362,13 +365,14 @@ public class PublicoGeral { //SuperClasse nomeada de PublicoGeral com os atribut
             case "4" -> exibirOcorrencia();
             default -> {
                 System.out.println("Insira uma ação válida!");
+                System.out.flush();
                 exibeMenu();
             }
         }
         sc.close();
     }
     //'getter' e 'setter' dos atributos da SuperClasse PublicoGeral (nome, idade, telefone e senha)
-    public String getNome(){
+    public String getNome() throws SQLException{
         DbContext db = new DbContext();
         ResultSet rs = db.executarQuerySql("SELECT nome FROM public.reclamabus(nome)");
         while(rs.next()){
@@ -381,41 +385,41 @@ public class PublicoGeral { //SuperClasse nomeada de PublicoGeral com os atribut
         this.nome = nome;
     }
 
-    public String getEmail(){
+    public String getEmail() throws SQLException{
         return email;
     }
     public void setEmail(String email){
         this.email = email;
     }
-    public int getIdade(){
+    public int getIdade() throws SQLException{
         return idade;
     }
     public void setIdade(int idade){
         this.idade = idade;
     }
 
-    public String getTelefone(){
+    public String getTelefone() throws SQLException{
         return telefone;
     }
     public void setTelefone(String telefone){
         this.telefone = telefone;
     }
 
-    public String getSenha(){
+    public String getSenha() throws SQLException{
         return senha;
     }
     private void setSenha(String senha){
         this.senha = senha;
     }
 
-    public String getIdoso(){
+    public String getIdoso() throws SQLException{
         return idoso;
     }
     public void setIdoso(String idoso){
         this.idoso = idoso;
     }
 
-    public String getPCD(){
+    public String getPCD() throws SQLException{
         return pcd;
     }
     public void setPCD(){
