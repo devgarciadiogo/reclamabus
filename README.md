@@ -4,13 +4,11 @@
 * [Índice](#índice)
 * [Descrição do Projeto](#descrição-do-projeto)
 * [Status do Projeto](#status-do-Projeto)
-* [Funcionalidades e Demonstração da Aplicação](#funcionalidades-e-demonstração-da-aplicação)
+* [Funcionalidades e Demonstração da Aplicação](#funcionalidades-do-projeto)
 * [Acesso ao Projeto](#acesso-ao-projeto)
+* [Abrir e rodar o projeto](#abrir-e-rodar-o-projeto)
 * [Tecnologias utilizadas](#tecnologias-utilizadas)
-* [Pessoas Contribuidoras](#pessoas-contribuidoras)
-* [Pessoas Desenvolvedoras do Projeto](#pessoas-desenvolvedoras)
-* [Licença](#licença)
-* [Conclusão](#conclusão)
+* [Autores](#autores)
 
 ## Descrição do Projeto
 Um sistema de ocorrências em transportes públicos no município de Niterói, desenvolvido em Java, visa proporcionar aos usuários uma plataforma para relatar incidentes ou experiências que tenham vivenciado durante seus deslocamentos. Este aplicativo tem como objetivo fornecer uma maneira eficiente e transparente para os cidadãos compartilharem informações sobre eventos relevantes no contexto dos transportes públicos.
@@ -59,7 +57,7 @@ https://github.com/devgarciadiogo/reclamabus
 * Verifique se há configurações específicas no README do projeto e ajuste conforme necessário.
 * Ao seguir essas etapas, você deve conseguir baixar, configurar e executar o projeto em sua máquina local. Se encontrar problemas ou mensagens de erro, consulte a seção de solução de problemas no README do projeto (se disponível) ou entre em contato com a equipe de desenvolvimento.
 
-## ✔️ Técnicas e tecnologias utilizadas
+## ✔️ Tecnologias utilizadas
 
 - ``Java 20``
 - ``InteliJ IDEA``
@@ -72,5 +70,4 @@ https://github.com/devgarciadiogo/reclamabus
 * [Leonardo Ibraim](https://github.com/LeonardoIBraim)
 * [Maiara Baltazar](https://github.com/maiarabaltazar)
 
-##
 
