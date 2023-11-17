@@ -1,10 +1,9 @@
-import Models.PublicoGeral;
+import Models.Usuarios;
 
 public class Main {
     public static void main(String[] args) {
-        PublicoGeral pg = new PublicoGeral();
-        pg.exibeMenu();
+        Usuarios user = new Usuarios();
+        user.iniciar();
     }
 
 }
-//
