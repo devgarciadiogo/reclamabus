@@ -10,7 +10,7 @@ public class DbContext {
 
     private static final String url = "jdbc:postgresql://localhost:5432/reclamabus";
     private static final String usuario = "postgres";
-    private static final String senha = "libra8241";
+    private static final String senha = "artesanato2015";
 
     public Connection conn = null;
 

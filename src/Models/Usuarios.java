@@ -107,7 +107,6 @@ public class Usuarios {
         }
         try {
             boolean status = db.executarUpdateSql("INSERT INTO public.usuarios(idade) VALUES ('"+getIdade()+"')");
-            status = db.executarUpdateSql("INSERT INTO public.usuarios(idoso) VALUES ('"+getIdoso()+"')");
             if (status) {
                 System.out.print("Idade registrada!");
             }
@@ -134,10 +133,10 @@ public class Usuarios {
             System.out.print("Você é PCD [S/N]? ");
             String esc = sc.next();
             esc.toUpperCase();
-            if(esc == "S"){
+            if(esc.equals( "S")){
                 setPCD("Sim");
                 break;
-            }else if(esc == "N"){
+            }else if(esc.equals ("N")){
                 setPCD("Não");
                 break;
             }else{
@@ -157,10 +156,10 @@ public class Usuarios {
             System.out.print("Você é funcionário de transporte público [S/N]? ");
             String esc = sc.next();
             esc.toUpperCase();
-            if(esc == "S"){
+            if(esc.equals ("S")){
                 setFuncionario("Sim");
                 break;
-            }else if(esc == "N"){
+            }else if(esc.equals ("N")){
                 setFuncionario("Não");
                 break;
             }else{
@@ -359,35 +358,35 @@ public class Usuarios {
         this.email = email;
     }
 
-    public int getIdade() throws SQLException{
+    public int getIdade(){
         return idade;
     }
     public void setIdade(int idade){
         this.idade = idade;
     }
 
-    public String getTelefone() throws SQLException{
+    public String getTelefone(){
         return telefone;
     }
     public void setTelefone(String telefone){
         this.telefone = telefone;
     }
 
-    public String getSenha() throws SQLException{
+    public String getSenha(){
         return senha;
     }
     private void setSenha(String senha){
         this.senha = senha;
     }
 
-    public String getIdoso() throws SQLException{
+    public String getIdoso() {
         return idoso;
     }
     public void setIdoso(String idoso){
         this.idoso = idoso;
     }
 
-    public String getPCD() throws SQLException{
+    public String getPCD(){
         return pcd;
     }
     public void setPCD(String pcd){
