@@ -39,8 +39,10 @@ public class Usuarios {
             int esc = sc.nextInt();
             if(esc == 1){
                 criarConta();
+                break;
             }else if(esc == 2){
                 login();
+                break;
             }else{
                 System.out.print("Insira uma ação válida: ");
                 esc = sc.nextInt();
@@ -131,6 +133,7 @@ public class Usuarios {
         setSenha(sc.next()); //Definição da senha do usuario
         while(senha.length() < 6){
             System.out.print("Insira uma senha com + de 6 caracteres: ");
+            setSenha(sc.next());
         }
         
         try {
@@ -142,6 +145,8 @@ public class Usuarios {
             pstmt.setString(5, getPCD());
             pstmt.setString(6, getFuncionario());
             pstmt.setString(7, getSenha());
+            pstmt.executeUpdate();
+
         }catch (Exception e){
             System.out.println("Erro na inserção no banco de dados!");
         }
@@ -160,7 +165,8 @@ public class Usuarios {
         }
 
         }
-    public byte[] criptografarSenha(String senha){
+    /* 
+        public byte[] criptografarSenha(String senha){
         byte[] senhaBytes = senha.getBytes(StandardCharsets.UTF_8);
         byte[] senhaCripto = null;
         try{
@@ -170,7 +176,7 @@ public class Usuarios {
         }        
         return senhaCripto;
     }
-
+    */
     public void login() throws SQLException{
         Scanner sc = new Scanner(System.in);
         System.out.print("Insira seu e-mail: ");
@@ -206,7 +212,6 @@ public class Usuarios {
         }
         db.desconectarBanco();
         return passou;
-        
     }
 
     private void definirConta(String email) throws SQLException {
@@ -329,13 +334,6 @@ public class Usuarios {
         this.telefone = telefone;
     }
 
-    public String getSenha(){
-        return senha;
-    }
-    private void setSenha(String senha){
-        this.senha = senha;
-    }
-
     public String getIdoso() {
         return idoso;
     }
@@ -355,5 +353,12 @@ public class Usuarios {
     }
     public void setFuncionario(String funcionario){
         this.funcionario = funcionario;
+    }
+
+    public String getSenha(){
+        return senha;
+    }
+    private void setSenha(String senha){
+        this.senha = senha;
     }
 }
