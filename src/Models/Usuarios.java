@@ -1,7 +1,6 @@
 package Models;
 
 import Data.DbContext;
-import Models.Ocorrencias;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
