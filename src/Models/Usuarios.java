@@ -56,7 +56,8 @@ public class Usuarios {
     }
     
     //Método CriarConta, onde será exibido ao usuário o passo a passo de como criar a sua conta
-    public void criarConta(){
+    public void criarConta() throws SQLException{
+        Connection conn = DbContext.connect();
         Scanner sc = new Scanner(System.in);
         DbContext db = new DbContext();
         try{
@@ -67,25 +68,9 @@ public class Usuarios {
 
         System.out.print("Insira seu nome: ");
         setNome(sc.next()); //Definição do nome do usuario
-        try {
-            boolean status = db.executarUpdateSql("INSERT INTO public.usuarios(nome) VALUES ('"+getNome()+"')");
-            if (status){
-                System.out.print("Nome registrado!");
-            }
-        }catch (Exception e){
-            System.out.println("Erro na inserção no banco de dados!");
-        }
 
         System.out.print("Insira o seu e-mail: ");
         setEmail(sc.next());
-        try {
-            boolean status = db.executarUpdateSql("INSERT INTO public.usuarios(email) VALUES ('"+getEmail()+"')");
-            if (status){
-                System.out.print("E-mail registrado!");
-            }
-        }catch (Exception e){
-            System.out.println("Erro na inserção no banco de dados!");
-        }
 
         System.out.print("Insira sua idade: ");
         while(true){
@@ -105,28 +90,12 @@ public class Usuarios {
                 System.out.print("Por favor, insira um valor válido: ");
             }
         }
-        try {
-            boolean status = db.executarUpdateSql("INSERT INTO public.usuarios(idade) VALUES ('"+getIdade()+"')");
-            if (status) {
-                System.out.print("Idade registrada!");
-            }
-        }catch (Exception e){
-            System.out.println("Erro na inserção no banco de dados!");
-        }
 
         System.out.print("Insira seu telefone (sem espaços): ");
         setTelefone(sc.next()); //Definição do telefone do usuario
         while(telefone.length() != 11){
             System.out.print("Insira um telefone válido: ");
             setTelefone(sc.next());
-        }
-        try {
-            boolean status = db.executarUpdateSql("INSERT INTO public.usuarios(telefone) VALUES ('"+getTelefone()+"')");
-            if (status) {
-                System.out.print("Telefone registrada!");
-            }
-        }catch (Exception e){
-            System.out.println("Erro na inserção no banco de dados!");
         }
 
         while(true){
@@ -143,14 +112,6 @@ public class Usuarios {
                 System.out.println("Insira uma opção válida!");
             }
         }
-        try {
-            boolean status = db.executarUpdateSql("INSERT INTO public.usuarios(pcd) VALUES ('"+getPCD()+"')");
-            if (status) {
-                System.out.print("Registrado!");
-            }
-        }catch (Exception e){
-            System.out.println("Erro na inserção no banco de dados!");
-        }
 
         while(true){
             System.out.print("Você é funcionário de transporte público [S/N]? ");
@@ -166,25 +127,22 @@ public class Usuarios {
                 System.out.println("Insira uma opção válida!");
             }
         }
-        try {
-            boolean status = db.executarUpdateSql("INSERT INTO public.usuarios(funcionario) VALUES ('"+getFuncionario()+"')");
-            if (status) {
-                System.out.print("Registrado!");
-            }
-        }catch (Exception e){
-            System.out.println("Erro na inserção no banco de dados!");
-        }
 
         System.out.print("Insira sua senha (+ 6 caracteres): ");
         setSenha(sc.next()); //Definição da senha do usuario
         while(senha.length() < 6){
             System.out.print("Insira uma senha com + de 6 caracteres: ");
         }
+        
         try {
-            boolean status = db.executarUpdateSql("INSERT INTO public.usuarios(senha) VALUES ('"+getSenha()+"')");
-            if (status) {
-                System.out.print("Senha registrada!");
-            }
+            PreparedStatement pstmt = conn.prepareStatement("INSERT INTO public.usuarios(nome, email, idade, telefone, pcd, funcionario, senha) VALUES (?, ?, ?, ?, ?, ?, ?)");
+            pstmt.setString(1, getNome());
+            pstmt.setString(2, getEmail());
+            pstmt.setInt(3, getIdade());
+            pstmt.setString(4, getTelefone());
+            pstmt.setString(5, getPCD());
+            pstmt.setString(6, getFuncionario());
+            pstmt.setString(7, getSenha());
         }catch (Exception e){
             System.out.println("Erro na inserção no banco de dados!");
         }
@@ -201,8 +159,8 @@ public class Usuarios {
             }
         sc.close();
         }
-    }
 
+        }
     public byte[] criptografarSenha(String senha){
         byte[] senhaBytes = senha.getBytes(StandardCharsets.UTF_8);
         byte[] senhaCripto = null;
