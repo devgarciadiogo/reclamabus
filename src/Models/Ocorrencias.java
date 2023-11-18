@@ -3,6 +3,7 @@ package Models;
 import Data.DbContext;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -15,6 +16,7 @@ public class Ocorrencias {
     private String detalhes;
 
     public void criarOcorrencia() throws SQLException{
+        Connection conn = DbContext.connect();
         Scanner sc = new Scanner(System.in);
         DbContext db = new DbContext();
         Usuarios user = new Usuarios();
@@ -23,14 +25,7 @@ public class Ocorrencias {
         System.out.print("Insira a linha correspondente do veículo da ocorrência: ");
         setLinha(sc.next());
         linha.toUpperCase();
-        try {
-            boolean status = db.executarUpdateSql("INSERT INTO public.ocorrencias(linha) VALUES ('"+getLinha()+"')");
-            if (status) {
-                System.out.print("Linha registrada!");
-            }
-        }catch (Exception e){
-            System.out.println("Erro na inserção no banco de dados!");
-        }
+        
         System.out.print("""
         Insira o período da ocorrência:
         
@@ -42,20 +37,15 @@ public class Ocorrencias {
         6) Entre 21:00 e 03:59
 
         Opção escolhida: """);
-        String esc = sc.next();
-        try { 
-            switch(esc){
-                case "1" -> db.executarUpdateSql("INSERT INTO public.ocorrencias(horario) VALUES ('04:00-06:59')");
-                case "2" -> db.executarUpdateSql("INSERT INTO public.ocorrencias(horario) VALUES ('07:00-10:29')");
-                case "3" -> db.executarUpdateSql("INSERT INTO public.ocorrencias(horario) VALUES ('10:30-11:59')");
-                case "4" -> db.executarUpdateSql("INSERT INTO public.ocorrencias(horario) VALUES ('12:00-16:59')");
-                case "5" -> db.executarUpdateSql("INSERT INTO public.ocorrencias(horario) VALUES ('17:00-20:59')");
-                case "6" -> db.executarUpdateSql("INSERT INTO public.ocorrencias(horario) VALUES ('21:00-03:59')");
+        setHorario(sc.next());
+        switch(getHorario()){
+                case "1" -> setHorario("04:00-06:59");
+                case "2" -> setHorario("07:00-10:29");
+                case "3" -> setHorario("10:30-11:59");
+                case "4" -> setHorario("12:00-16:59");
+                case "5" -> setHorario("17:00-20:59");
+                case "6" -> setHorario("21:00-03:59");
             }
-            System.out.println("Horário registrado!");
-        }catch(Exception e){
-            System.out.println("Erro na inserção no banco de dados!");              
-        }
 
         System.out.print("""
         Insira a categoria da ocorrência:
@@ -68,26 +58,25 @@ public class Ocorrencias {
         6) Direção perigosa
         
         Opção escolhida: """);
-        esc = sc.next();
-        try { 
-            switch(esc){
-                case "1" -> db.executarUpdateSql("INSERT INTO public.ocorrencias(categoria) VALUES ('Atraso')");
-                case "2" -> db.executarUpdateSql("INSERT INTO public.ocorrencias(categoria) VALUES ('Higiene')");
-                case "3" -> db.executarUpdateSql("INSERT INTO public.ocorrencias(categoria) VALUES ('Lotaco')");
-                case "4" -> db.executarUpdateSql("INSERT INTO public.ocorrencias(categoria) VALUES ('Acessibilidade (Manutenção de equipamento)')");
-                case "5" -> db.executarUpdateSql("INSERT INTO public.ocorrencias(categoria) VALUES ('Acessibilidade (Falta de preparo do funcionário)')");
-                case "6" -> db.executarUpdateSql("INSERT INTO public.ocorrencias(categoria) VALUES (Direcao perigosa')");
+        setCategoria(sc.next());
+        switch(getCategoria()){
+                case "1" -> setCategoria("Atraso");
+                case "2" -> setCategoria("Higiene");
+                case "3" -> setCategoria("Lotacao");
+                case "4" -> setCategoria("Acessibilidade (Manutenção de equipamento)");
+                case "5" -> setCategoria("Acessibilidade (Falta de preparo do funcionário)");
+                case "6" -> setCategoria("Direcao perigosa");
             }
-            System.out.println("Categoria registrada!");
-        }catch(Exception e){
-            System.out.println("Erro na inserção no banco de dados!");              
-        }
-
+        
         System.out.println("Caso queira, dê mais detalhes sobre a situação em si (limite de 300 caracteres):");
         setDetalhes(sc.next());
-        try{
-        db.executarQuerySql("INSERT INTO public.ocorrencias(detalhes) VALUES ('"+getDetalhes()+"')");
-        }catch(Exception e){
+        try {
+            PreparedStatement pstmt = conn.prepareStatement("INSERT INTO public.usuarios(linha, horario, categoria, detalhes) VALUES (?, ?, ?, ?)");
+            pstmt.setString(1, getLinha());
+            pstmt.setString(2, getHorario());
+            pstmt.setString(3, getCategoria());
+            pstmt.setString(4, getDetalhes());
+        }catch (Exception e){
             System.out.println("Erro na inserção no banco de dados!");
         }
         System.out.println("Ocorrência registrada! Insira 0 para retornar ao Menu Principal: ");
