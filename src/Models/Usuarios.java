@@ -76,14 +76,14 @@ public class Usuarios {
         while(true){
             try {
                 setIdade(sc.nextInt()); //Definição da idade do usuario
-                while(idade < 0 || idade > 120){
+                while(getIdade() < 0 || getIdade() > 120){
                     System.out.print("Por favor, insira uma idade válida: ");
                     setIdade(sc.nextInt());
-                    if(idade >= 60){
-                        setIdoso("Sim");
-                    }else{
-                        setIdoso("Não");
-                    }
+                }
+                if(getIdade() >= 60){
+                    setIdoso("Sim");
+                }else{
+                    setIdoso("Não");
                 }
                 break;
             }catch (Exception InputMismatchException){
@@ -136,19 +136,22 @@ public class Usuarios {
         }
         
         try {
-            PreparedStatement pstmt = conn.prepareStatement("INSERT INTO public.usuarios(nome, email, idade, telefone, pcd, funcionario, senha) VALUES (?, ?, ?, ?, ?, ?, ?)");
+            PreparedStatement pstmt = conn.prepareStatement("INSERT INTO public.usuarios(nome, email, idade, telefone, senha, idoso, pcd, funcionario) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
             pstmt.setString(1, getNome());
             pstmt.setString(2, getEmail());
             pstmt.setInt(3, getIdade());
             pstmt.setString(4, getTelefone());
-            pstmt.setString(5, getPCD());
-            pstmt.setString(6, getFuncionario());
-            pstmt.setString(7, getSenha());
+            pstmt.setString(5, getSenha());
+            pstmt.setString(6, getIdoso());
+            pstmt.setString(7, getPCD());
+            pstmt.setString(8, getFuncionario());
             pstmt.executeUpdate();
 
         }catch (Exception e){
             System.out.println("Erro na inserção no banco de dados!");
+            e.printStackTrace();
         }
+
 
         System.out.print("Conta criada! Insira 0 para retornar ao menu: ");
         int voltar = sc.nextInt();
@@ -179,7 +182,7 @@ public class Usuarios {
         }else{
             System.out.println("Credenciais incorretas. Tente novamente...");
             System.out.flush();
-            login();
+            iniciar();
         }
         sc.close();
     }
@@ -188,8 +191,8 @@ public class Usuarios {
         DbContext db = new DbContext();
         boolean passou = false;
         db.conectarBanco();
-        ResultSet rs1 = db.executarQuerySql("SELECT id FROM public.usuarios WHERE('"+email+"')");
-        ResultSet rs2 = db.executarQuerySql("SELECT id FROM public.usuarios WHERE('"+senha+"')");
+        ResultSet rs1 = db.executarQuerySql("SELECT id_usuarios FROM public.usuarios WHERE('"+email+"')");
+        ResultSet rs2 = db.executarQuerySql("SELECT id_usuarios FROM public.usuarios WHERE('"+senha+"')");
         if(rs1 == rs2){
             passou = true;
         }else{
@@ -202,14 +205,15 @@ public class Usuarios {
     private void definirConta(String email) throws SQLException {
         DbContext db = new DbContext();
 
-        ResultSet rs = db.executarQuerySql("SELECT nome, idade, email, telefone, funcionario, pcd FROM public.usuarios WHERE('"+email+"')");
+        ResultSet rs = db.executarQuerySql("SELECT nome, idade, email, telefone, idoso, pcd, funcionario FROM public.usuarios WHERE('"+email+"')");
 
         setNome(rs.getString("nome"));
         setIdade(rs.getInt("idade"));
         setEmail(rs.getString("email"));
         setTelefone(rs.getString("telefone"));
-        setFuncionario(rs.getString("funcionario"));
+        setIdoso(rs.getString("idoso"));
         setPCD(rs.getString("pcd"));
+        setFuncionario(rs.getString("funcionario"));
     }
 
     private void exibirConta() throws SQLException{
