@@ -105,31 +105,31 @@ public class Ocorrencias {
         }
     
 
-    public String getLinha(){
+    private String getLinha(){
         return linha;
     }
-    public void setLinha(String linha){
+    private void setLinha(String linha){
         this.linha = linha;
     }
 
-    public String getHorario(){
+    private String getHorario(){
         return horario;
     }
-    public void setHorario(String horario){
+    private void setHorario(String horario){
         this.horario = horario;
     }
 
-    public String getCategoria(){
+    private String getCategoria(){
         return categoria;
     }
-    public void setCategoria(String categoria){
+    private void setCategoria(String categoria){
         this.categoria = categoria;
     }
 
-    public String getDetalhes(){
+    private String getDetalhes(){
         return detalhes;
     }
-    public void setDetalhes(String detalhes){
+    private void setDetalhes(String detalhes){
         this.detalhes = detalhes;
     }
 }

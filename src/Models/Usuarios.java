@@ -2,13 +2,12 @@ package Models;
 
 import Data.DbContext;
 
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
+//import java.nio.charset.StandardCharsets;
+//import java.security.MessageDigest;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Scanner;
 
 public class Usuarios {
@@ -95,7 +94,7 @@ public class Usuarios {
         System.out.print("Insira seu telefone (sem espaços): ");
         setTelefone(sc.next()); //Definição do telefone do usuario
         while(telefone.length() != 11){
-            System.out.print("Insira um telefone válido: ");
+            System.out.print("Por favor, insira um telefone válido: ");
             setTelefone(sc.next());
         }
 
@@ -110,7 +109,7 @@ public class Usuarios {
                 setPCD("Não");
                 break;
             }else{
-                System.out.println("Insira uma opção válida!");
+                System.out.println("Por favor, insira uma opção válida!");
             }
         }
 
@@ -125,7 +124,7 @@ public class Usuarios {
                 setFuncionario("Não");
                 break;
             }else{
-                System.out.println("Insira uma opção válida!");
+                System.out.println("Por favor, insira uma opção válida!");
             }
         }
 
@@ -155,7 +154,7 @@ public class Usuarios {
         int voltar = sc.nextInt();
 
         if(voltar == 0){
-            iniciar();
+            menuPrincipal();
         }else{
             while(voltar != 0) {
                 System.out.print("Insira 0 para retornar ao menu: "); //Loop criado com objetivo da funcionalidade de retorno
@@ -165,26 +164,16 @@ public class Usuarios {
         }
 
         }
-    /* 
-        public byte[] criptografarSenha(String senha){
-        byte[] senhaBytes = senha.getBytes(StandardCharsets.UTF_8);
-        byte[] senhaCripto = null;
-        try{
-            senhaCripto = MessageDigest.getInstance("SHA-256").digest(senhaBytes);
-        } catch(Exception e) {
-            System.out.println("Erro na criptografia!");
-        }        
-        return senhaCripto;
-    }
-    */
+    
     public void login() throws SQLException{
         Scanner sc = new Scanner(System.in);
         System.out.print("Insira seu e-mail: ");
         setEmail(sc.next());
         System.out.print("Insira sua senha: ");
         setSenha(sc.next());
-        if(checkLogin(this.email, this.senha) == true){
-            definirConta(this.email);
+        if(checkLogin(getEmail(), getSenha())){
+            definirConta(getEmail());
+            System.out.flush();
             System.out.println("Seja bem vindo/a!");
             menuPrincipal();
         }else{
@@ -199,12 +188,8 @@ public class Usuarios {
         DbContext db = new DbContext();
         boolean passou = false;
         db.conectarBanco();
-        
-        Connection conn = DbContext.connect();
-        Statement stmt1 = conn.createStatement();
-        Statement stmt2 = conn.createStatement();
-        ResultSet rs1 = stmt1.executeQuery("SELECT id FROM public.usuarios WHERE('"+email+"')");
-        ResultSet rs2 = stmt2.executeQuery("SELECT id FROM public.usuarios WHERE('"+senha+"')");
+        ResultSet rs1 = db.executarQuerySql("SELECT id FROM public.usuarios WHERE('"+email+"')");
+        ResultSet rs2 = db.executarQuerySql("SELECT id FROM public.usuarios WHERE('"+senha+"')");
         if(rs1 == rs2){
             passou = true;
         }else{
@@ -215,19 +200,21 @@ public class Usuarios {
     }
 
     private void definirConta(String email) throws SQLException {
-        Connection conn = DbContext.connect();
-        Statement stmt = conn.createStatement();
-        ResultSet rs = stmt.executeQuery("SELECT nome, idade, email, telefone, funcionario, pcd FROM public.usuarios WHERE('"+senha+"')");
-        this.nome = rs.getString("nome");
-        this.idade = rs.getInt("idade");
-        this.email = rs.getString("email");
-        this.telefone = rs.getString("telefone");
-        this.funcionario = rs.getString("funcionario");
-        this.pcd = rs.getString("pcd");
+        DbContext db = new DbContext();
+
+        ResultSet rs = db.executarQuerySql("SELECT nome, idade, email, telefone, funcionario, pcd FROM public.usuarios WHERE('"+email+"')");
+
+        setNome(rs.getString("nome"));
+        setIdade(rs.getInt("idade"));
+        setEmail(rs.getString("email"));
+        setTelefone(rs.getString("telefone"));
+        setFuncionario(rs.getString("funcionario"));
+        setPCD(rs.getString("pcd"));
     }
 
     private void exibirConta() throws SQLException{
-        Scanner sc = new Scanner(System.in); 
+        Scanner sc = new Scanner(System.in);
+
         System.out.println("Nome: "+getNome());
         System.out.println("Idade: "+getIdade());
         System.out.println("Telefone: "+getTelefone());
@@ -241,7 +228,7 @@ public class Usuarios {
             System.out.flush();
         }else{
             while(!voltar.equals("0")) {
-                System.out.print("Insira 0 para retornar ao menu: ");
+                System.out.print("Por favor, insira 0 para retornar ao menu: ");
                 voltar = sc.next();
             }
         }
@@ -256,23 +243,30 @@ public class Usuarios {
         System.out.println("Tem certeza disso? Esta eh uma acao irreversivel. [S/N]");
         String esc = sc.next();
         esc.toUpperCase();
-        if(esc == "S"){
-            boolean status = db.executarUpdateSql("DELETE FROM public.usuarios WHERE email = ('"+this.email+"')");
-            if(status){
-                System.out.println("Conta excluida com sucesso! Retornando ao Menu Inicial...");
-                System.out.flush();
-                iniciar();
-            }else{
-                System.out.println("Houve um erro na exclusao da conta. Retornando ao Menu Principal");
+        while(true){
+            if(esc == "S"){
+                boolean status = db.executarUpdateSql("DELETE FROM public.usuarios WHERE email = ('"+getEmail()+"')");
+                if(status){
+                    System.out.println("Conta excluida com sucesso! Retornando ao Menu Inicial...");
+                    System.out.flush();
+                    iniciar();
+                    break;
+                }else{
+                    System.out.println("Houve um erro na exclusao da conta. Retornando ao Menu Principal...");
+                    System.out.flush();
+                    menuPrincipal();
+                    break;
+                }
+            }else if(esc == "N"){
+                System.out.println("Exclusao cancelada, retornando ao Menu Principal...");
                 System.out.flush();
                 menuPrincipal();
+                break;
+            }else{
+                System.out.print("Por favor, insira uma escolha valida: ");
+                esc = sc.next();
+                esc.toUpperCase();
             }
-        }else if(esc == "N"){
-            System.out.println("Exclusao cancelada, retornando a tela inicial...");
-            System.out.flush();
-            menuPrincipal();
-        }else{
-            System.out.println("");
         }
         db.desconectarBanco();
         sc.close();
@@ -298,7 +292,7 @@ public class Usuarios {
             case "3" -> oc.criarOcorrencia();
             case "4" -> oc.exibirOcorrencia();
             default -> {
-                System.out.println("Insira uma ação válida!");
+                System.out.println("Por favor, insira uma ação válida!");
                 System.out.flush();
                 iniciar();
             }
@@ -306,56 +300,56 @@ public class Usuarios {
         sc.close();
     }
     //'getter' e 'setter' dos atributos da SuperClasse PublicoGeral (nome, idade, telefone e senha)
-    public String getNome(){
+    private String getNome(){
         return nome;
     }
-    public void setNome(String nome){
+    private void setNome(String nome){
         this.nome = nome;
     }
 
-    public String getEmail(){
+    private String getEmail(){
         return email;
     }
-    public void setEmail(String email){
+    private void setEmail(String email){
         this.email = email;
     }
 
-    public int getIdade(){
+    private int getIdade(){
         return idade;
     }
-    public void setIdade(int idade){
+    private void setIdade(int idade){
         this.idade = idade;
     }
 
-    public String getTelefone(){
+    private String getTelefone(){
         return telefone;
     }
-    public void setTelefone(String telefone){
+    private void setTelefone(String telefone){
         this.telefone = telefone;
     }
 
-    public String getIdoso() {
+    private String getIdoso() {
         return idoso;
     }
-    public void setIdoso(String idoso){
+    private void setIdoso(String idoso){
         this.idoso = idoso;
     }
 
-    public String getPCD(){
+    private String getPCD(){
         return pcd;
     }
-    public void setPCD(String pcd){
+    private void setPCD(String pcd){
         this.pcd = pcd;
     }
 
-    public String getFuncionario(){
+    private String getFuncionario(){
         return funcionario;
     }
-    public void setFuncionario(String funcionario){
+    private void setFuncionario(String funcionario){
         this.funcionario = funcionario;
     }
 
-    public String getSenha(){
+    private String getSenha(){
         return senha;
     }
     private void setSenha(String senha){
