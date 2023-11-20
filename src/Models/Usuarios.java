@@ -35,20 +35,19 @@ public class Usuarios {
         Insira a ação desejada: """);
         while(true){
             try{
-            int esc = sc.nextInt();
-            if(esc == 1){
-                criarConta();
+                String esc = sc.next();
+                if(esc.equals("1")){
+                    criarConta();
+                    break;
+                }else if(esc.equals("2")){
+                    login();
+                    break;
+                }else{
+                    System.out.print("Insira uma ação válida: ");
+                    esc = sc.next();
+                }
                 break;
-            }else if(esc == 2){
-                login();
-                break;
-            }else{
-                System.out.print("Insira uma ação válida: ");
-                esc = sc.nextInt();
-            }
-            break;
             }catch(Exception e){
-                System.out.println("Insira uma ação válida: ");
                 e.printStackTrace();
             }
         }
@@ -110,7 +109,7 @@ public class Usuarios {
                 setPCD("Não");
                 break;
             }else{
-                System.out.println("Por favor, insira uma opção válida!");
+                System.out.print("Por favor, insira uma opção válida: ");
             }
         }
 

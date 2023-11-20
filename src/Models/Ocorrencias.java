@@ -83,15 +83,15 @@ public class Ocorrencias {
         System.out.println("Ocorrência registrada! Insira 0 para retornar ao Menu Principal: ");
         int voltar = sc.nextInt();
         while(true){
-        if(voltar != 0){
-            System.out.println("Insira 0 para retornar ao Menu Principal: ");
-            voltar = sc.nextInt();
-        }else{
-            System.out.flush();
-             sc.close();
-        db.desconectarBanco();
-            user.menuPrincipal();
-        }
+            if(voltar != 0){
+                System.out.println("Insira 0 para retornar ao Menu Principal: ");
+                voltar = sc.nextInt();
+            }else{
+                sc.close();
+                db.desconectarBanco();
+                user.menuPrincipal();
+                break;
+            }
         }
        
     }
