@@ -248,7 +248,7 @@ public class Usuarios {
         String esc = sc.next();
         esc.toUpperCase();
         while(true){
-            if(esc == "S"){
+            if(esc.equals("S")){
                 boolean status = db.executarUpdateSql("DELETE FROM public.usuarios WHERE email = ('"+getEmail()+"')");
                 if(status){
                     System.out.println("Conta excluida com sucesso! Retornando ao Menu Inicial...");
@@ -261,7 +261,7 @@ public class Usuarios {
                     menuPrincipal();
                     break;
                 }
-            }else if(esc == "N"){
+            }else if(esc.equals("N")){
                 System.out.println("Exclusao cancelada, retornando ao Menu Principal...");
                 System.out.flush();
                 menuPrincipal();
@@ -276,6 +276,96 @@ public class Usuarios {
         sc.close();
     }
 
+    public void atualizarConta() throws SQLException{
+        Scanner sc = new Scanner(System.in);
+        DbContext db = new DbContext();
+        int esc = 0;
+        System.out.print("""
+        Insira o dado a ser atualizado:
+        
+        1) Nome
+        2) E-mail
+        3) Idade
+        4) Telefone
+        5) Senha
+        
+        Insira a opção desejada:  """);
+        while(esc != 1 || esc != 2 || esc != 3 || esc != 4 || esc != 5){
+            try{
+            esc = sc.nextInt();
+            }catch(Exception InputMismatchException){
+                System.out.println("Insira uma opção valida!");
+            }
+                switch(esc){
+                    case 1:
+                        System.out.print("Insira o novo nome: ");
+                        setNome(sc.next());
+                        try{
+                        boolean status = db.executarUpdateSql("UPDATE public.usuarios SET nome = '"+getNome()+"' WHERE email = '"+getEmail()+"'");
+                        if(status){
+                            System.out.println("Nome atualizado com sucesso! Retornando ao Menu Principal...");
+                            menuPrincipal();
+                        }
+                        }catch(Exception e){
+                            System.out.println("Erro na inserção no banco de dados!");
+                            e.printStackTrace();
+                        }
+                    case 2:
+                        System.out.print("Insira o novo E-mail: ");
+                        setEmail(sc.next());
+                        try{
+                        boolean status = db.executarUpdateSql("UPDATE public.usuarios SET email = '"+getEmail()+"' WHERE telefone = '"+getTelefone()+"'");
+                        if(status){
+                            System.out.println("E-mail atualizado com sucesso! Retornando ao Menu Principal...");
+                            menuPrincipal();
+                        }
+                        }catch(Exception e){
+                            System.out.println("Erro na inserção no banco de dados!");
+                            e.printStackTrace();
+                        }
+                    case 3:
+                        System.out.print("Insira a nova idade: ");
+                        setIdade(sc.nextInt());
+                        try{
+                        boolean status = db.executarUpdateSql("UPDATE public.usuarios SET idade = '"+getIdade()+"' WHERE email = '"+getEmail()+"'");
+                        if(status){
+                            System.out.println("Nome atualizado com sucesso! Retornando ao Menu Principal...");
+                            menuPrincipal();
+                        }
+                        }catch(Exception e){
+                            System.out.println("Erro na inserção no banco de dados!");
+                            e.printStackTrace();
+                        }
+                    case 4:
+                        System.out.print("Insira o novo telefone: ");
+                        setTelefone(sc.next());
+                        try{
+                        boolean status = db.executarUpdateSql("UPDATE public.usuarios SET telefone = '"+getTelefone()+"' WHERE email = '"+getEmail()+"'");
+                        if(status){
+                            System.out.println("Nome atualizado com sucesso! Retornando ao Menu Principal...");
+                            menuPrincipal();
+                        }
+                        }catch(Exception e){
+                            System.out.println("Erro na inserção no banco de dados!");
+                            e.printStackTrace();
+                        }
+                    case 5:
+                        System.out.print("Insira a nova senha: ");
+                        setSenha(sc.next());
+                        try{
+                        boolean status = db.executarUpdateSql("UPDATE public.usuarios SET senha = '"+getSenha()+"' WHERE email = '"+getEmail()+"'");
+                        if(status){
+                            System.out.println("Nome atualizado com sucesso! Retornando ao Menu Principal...");
+                            menuPrincipal();
+                        }
+                        }catch(Exception e){
+                            System.out.println("Erro na inserção no banco de dados!");
+                            e.printStackTrace();
+                        }
+            }  
+        }
+    }
+
     public void menuPrincipal() throws SQLException { //Método menuPrincipal, onde exibirá na tela do usuário as opções de funcionalidade do ReclamaBus
         Scanner sc = new Scanner(System.in);
         Ocorrencias oc = new Ocorrencias();
@@ -283,6 +373,7 @@ public class Usuarios {
         Bem-vindo à sua conta!
                                         
         1) Exibir Conta
+        2) Atualizar Conta
         2) Excluir Conta
         3) Criar Ocorrência
         4) Exibir Ocorrência
@@ -292,9 +383,10 @@ public class Usuarios {
         switch (esc) {
             case "0" -> System.exit(0);
             case "1" -> exibirConta();
-            case "2" -> excluirConta();
-            case "3" -> oc.criarOcorrencia();
-            case "4" -> oc.exibirOcorrencia();
+            case "2" -> atualizarConta();
+            case "3" -> excluirConta();
+            case "4" -> oc.criarOcorrencia();
+            case "5" -> oc.exibirOcorrencia();
             default -> {
                 System.out.println("Por favor, insira uma ação válida!");
                 System.out.flush();
