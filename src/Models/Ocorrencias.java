@@ -18,9 +18,7 @@ public class Ocorrencias {
     public void criarOcorrencia() throws SQLException{
         Connection conn = DbContext.connect();
         Scanner sc = new Scanner(System.in);
-        DbContext db = new DbContext();
         Usuarios user = new Usuarios();
-        db.conectarBanco();
         
         System.out.print("Insira a linha correspondente do veículo da ocorrência: ");
         setLinha(sc.next());
@@ -83,19 +81,15 @@ public class Ocorrencias {
         
         System.out.println("Ocorrência registrada! Insira 0 para retornar ao Menu Principal: ");
         int voltar = sc.nextInt();
-            
+        while(voltar != 0){    
             if(voltar == 0){
                 user.menuPrincipal();
-                
             }else{
-                while(voltar != 0){
                     System.out.println("Insira 0 para retornar ao Menu Principal: ");
                     voltar = sc.nextInt();
                 }
             }
             sc.close();
-            db.desconectarBanco();
-       
     }
 
     public void exibirOcorrencia() throws SQLException{

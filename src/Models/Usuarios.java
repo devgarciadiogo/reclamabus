@@ -22,9 +22,6 @@ public class Usuarios {
 
     public void iniciar(){
         Scanner sc = new Scanner(System.in);
-        DbContext db = new DbContext();
-
-        db.conectarBanco();
 
         System.out.print("""
         Bem vindo ao ReclamaBus!
@@ -49,19 +46,12 @@ public class Usuarios {
             }
         }
         sc.close();
-        db.desconectarBanco();
     }
     
     //Método CriarConta, onde será exibido ao usuário o passo a passo de como criar a sua conta
     public void criarConta() throws SQLException{
         Connection conn = DbContext.connect();
         Scanner sc = new Scanner(System.in);
-        DbContext db = new DbContext();
-        try{
-            db.conectarBanco();
-        }catch(Exception e){
-            System.out.println("Erro ao conectar ao banco!");
-        }
 
         System.out.print("Insira seu nome: ");
         setNome(sc.next()); //Definição do nome do usuario
@@ -162,8 +152,7 @@ public class Usuarios {
             }
         sc.close();
         }
-
-        }
+    }
     
     public void login() throws SQLException{
         Scanner sc = new Scanner(System.in);
@@ -388,7 +377,7 @@ public class Usuarios {
             default -> {
                 System.out.println("Por favor, insira uma ação válida!");
                 System.out.flush();
-                iniciar();
+                menuPrincipal();
             }
         }
         sc.close();
