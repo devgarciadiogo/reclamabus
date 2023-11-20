@@ -236,7 +236,7 @@ public class Usuarios {
                 voltar = sc.next();
             }
         }
-        iniciar();
+        menuPrincipal();
         sc.close();
     }
 
