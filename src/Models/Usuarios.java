@@ -20,7 +20,7 @@ public class Usuarios {
     private String pcd;
     private String funcionario;
 
-    public void iniciar(){
+    public void iniciar() throws SQLException{
         Scanner sc = new Scanner(System.in);
         DbContext db = new DbContext();
 
@@ -34,23 +34,23 @@ public class Usuarios {
 
         Insira a ação desejada: """);
         String esc = sc.next();
-        while(!esc.equals("1") || !esc.equals("2")){
-            try{
+        //while(!esc.equals("1") || !esc.equals("2")){
                 if(esc.equals("1")){
                     criarConta();
                 }else if(esc.equals("2")){
                     login();
+                
+                /*
                 }else{
                     System.out.print("Insira uma ação válida: ");
                     esc = sc.next();
                 }
-            }catch(Exception e){
-                e.printStackTrace();
-            }
+                */
+                }
+            sc.close();
+            db.desconectarBanco();
         }
-        sc.close();
-        db.desconectarBanco();
-    }
+        
     
     //Método CriarConta, onde será exibido ao usuário o passo a passo de como criar a sua conta
     public void criarConta() throws SQLException{
