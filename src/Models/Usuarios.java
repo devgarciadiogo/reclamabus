@@ -10,6 +10,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Scanner;
 
+import javax.naming.spi.DirStateFactory.Result;
+
 public class Usuarios {
     private String nome;
     private String email;
@@ -160,7 +162,7 @@ public class Usuarios {
         setEmail(sc.next());
         System.out.print("Insira sua senha: ");
         setSenha(sc.next());
-        if(checkLogin(getEmail(), getSenha())){
+        if(checkSenha(getEmail(), getSenha())){
             definirConta(getEmail());
             System.out.flush();
             System.out.println("Seja bem vindo/a!");
@@ -173,19 +175,28 @@ public class Usuarios {
         sc.close();
     }
     
-    public boolean checkLogin(String email, String senha) throws SQLException{
-        Connection conn = DbContext.connect();
-        boolean passou = false;
-        
-        PreparedStatement pstmt = conn.prepareStatement("SELECT id_usuarios FROM public.usuarios WHERE email = ? AND senha = ?");
-        pstmt.setString(1, email);
-        pstmt.setString(2, senha);
-        try(ResultSet rs = pstmt.executeQuery()){ 
+    public String pegaSenha(String email) throws SQLException{
+        try(Connection conn = DbContext.connect()){
+            PreparedStatement pstmt = conn.prepareStatement("SELECT senha FROM public.usuarios WHERE email = ?");
+            pstmt.setString(1, email);
+            ResultSet rs = pstmt.executeQuery();
+
             if(rs.next()){
-                passou = true;
+                return rs.getString("senha");
+            }else{
+                throw new SQLException("E-mail nao cadastrado!");
             }
         }
-        return passou = true;
+    }
+    
+    public boolean checkSenha(String email, String senha) throws SQLException{
+        try{ 
+            String senhaPega = pegaSenha(email);
+            return senhaPega.equals(senha);
+        }catch(SQLException e){
+            e.printStackTrace();
+            return false;
+        }
     }
 
     private void definirConta(String email) throws SQLException {
