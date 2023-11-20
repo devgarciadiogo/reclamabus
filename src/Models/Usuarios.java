@@ -23,7 +23,7 @@ public class Usuarios {
     public void iniciar(){
         Scanner sc = new Scanner(System.in);
         DbContext db = new DbContext();
-        
+
         db.conectarBanco();
 
         System.out.print("""
@@ -33,20 +33,17 @@ public class Usuarios {
         2) Fazer Login
 
         Insira a ação desejada: """);
-        while(true){
+        String esc = sc.next();
+        while(!esc.equals("1") || !esc.equals("2")){
             try{
-                String esc = sc.next();
                 if(esc.equals("1")){
                     criarConta();
-                    break;
                 }else if(esc.equals("2")){
                     login();
-                    break;
                 }else{
                     System.out.print("Insira uma ação válida: ");
                     esc = sc.next();
                 }
-                break;
             }catch(Exception e){
                 e.printStackTrace();
             }
