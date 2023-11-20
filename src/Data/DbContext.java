@@ -12,7 +12,7 @@ public class DbContext {
     private static final String usuario = "postgres";
     private static final String senha = "artesanato2015";
 
-    public Connection conn = null;
+    public Connection conn;
 
     public static Connection connect() throws SQLException{
         return DriverManager.getConnection(url, usuario, senha);

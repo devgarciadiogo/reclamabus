@@ -71,7 +71,7 @@ public class Ocorrencias {
         System.out.println("Caso queira, dê mais detalhes sobre a situação em si (limite de 300 caracteres):");
         setDetalhes(sc.next());
         try {
-            PreparedStatement pstmt = conn.prepareStatement("INSERT INTO public.usuarios(linha, horario, categoria, detalhes) VALUES (?, ?, ?, ?)");
+            PreparedStatement pstmt = conn.prepareStatement("INSERT INTO public.ocorrencias(linha, horario, categoria, detalhes) VALUES (?, ?, ?, ?)");
             pstmt.setString(1, getLinha());
             pstmt.setString(2, getHorario());
             pstmt.setString(3, getCategoria());
@@ -87,12 +87,12 @@ public class Ocorrencias {
             voltar = sc.nextInt();
         }else{
             System.out.flush();
-            user.menuPrincipal();
-            break;
-        }
-        }
-        sc.close();
+             sc.close();
         db.desconectarBanco();
+            user.menuPrincipal();
+        }
+        }
+       
     }
 
     public void exibirOcorrencia() throws SQLException{

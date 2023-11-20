@@ -47,8 +47,9 @@ public class Usuarios {
                 esc = sc.nextInt();
             }
             break;
-            }catch(Exception InputMismatchException){
+            }catch(Exception e){
                 System.out.println("Insira uma ação válida: ");
+                e.printStackTrace();
             }
         }
         sc.close();
@@ -279,6 +280,7 @@ public class Usuarios {
     public void atualizarConta() throws SQLException{
         Scanner sc = new Scanner(System.in);
         DbContext db = new DbContext();
+        db.conectarBanco();
         int esc = 0;
         System.out.print("""
         Insira o dado a ser atualizado:
@@ -374,9 +376,9 @@ public class Usuarios {
                                         
         1) Exibir Conta
         2) Atualizar Conta
-        2) Excluir Conta
-        3) Criar Ocorrência
-        4) Exibir Ocorrência
+        3) Excluir Conta
+        4) Criar Ocorrência
+        5) Exibir Ocorrência
 
         Insira o número da ação desejada (insira 0 para sair): """);
         String esc = sc.next();
