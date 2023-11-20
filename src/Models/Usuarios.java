@@ -174,18 +174,18 @@ public class Usuarios {
     }
     
     public boolean checkLogin(String email, String senha) throws SQLException{
-        DbContext db = new DbContext();
+        Connection conn = DbContext.connect();
         boolean passou = false;
-        db.conectarBanco();
-        ResultSet rs1 = db.executarQuerySql("SELECT id_usuarios FROM public.usuarios WHERE('"+email+"')");
-        ResultSet rs2 = db.executarQuerySql("SELECT id_usuarios FROM public.usuarios WHERE('"+senha+"')");
-        if(rs1 == rs2){
-            passou = true;
-        }else{
-            passou = false;
+        
+        PreparedStatement pstmt = conn.prepareStatement("SELECT id_usuarios FROM public.usuarios WHERE email = ? AND senha = ?");
+        pstmt.setString(1, email);
+        pstmt.setString(2, senha);
+        try(ResultSet rs = pstmt.executeQuery()){ 
+            if(rs.next()){
+                passou = true;
+            }
         }
-        db.desconectarBanco();
-        return passou;
+        return passou = true;
     }
 
     private void definirConta(String email) throws SQLException {
