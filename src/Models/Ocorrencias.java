@@ -76,6 +76,7 @@ public class Ocorrencias {
             pstmt.setString(2, getHorario());
             pstmt.setString(3, getCategoria());
             pstmt.setString(4, getDetalhes());
+            pstmt.executeUpdate();
         }catch (Exception e){
             System.out.println("Erro na inserção no banco de dados!");
         }
