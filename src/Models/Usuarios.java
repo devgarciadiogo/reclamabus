@@ -20,7 +20,7 @@ public class Usuarios {
     private String pcd;
     private String funcionario;
 
-    public void iniciar() throws SQLException{
+    public void iniciar(){
         Scanner sc = new Scanner(System.in);
         DbContext db = new DbContext();
 
@@ -34,23 +34,23 @@ public class Usuarios {
 
         Insira a ação desejada: """);
         String esc = sc.next();
-        //while(!esc.equals("1") || !esc.equals("2")){
+        while(!esc.equals("1") || !esc.equals("2")){
+            try{
                 if(esc.equals("1")){
                     criarConta();
                 }else if(esc.equals("2")){
                     login();
-                
-                /*
                 }else{
                     System.out.print("Insira uma ação válida: ");
                     esc = sc.next();
                 }
-                */
-                }
-            sc.close();
-            db.desconectarBanco();
+            }catch(Exception e){
+                e.printStackTrace();
+            }
         }
-        
+        sc.close();
+        db.desconectarBanco();
+    }
     
     //Método CriarConta, onde será exibido ao usuário o passo a passo de como criar a sua conta
     public void criarConta() throws SQLException{
@@ -157,7 +157,7 @@ public class Usuarios {
             menuPrincipal();
         }else{
             while(voltar != 0) {
-                System.out.print("Insira 0 para retornar ao menu: "); //Loop criado com objetivo da funcionalidade de retorno
+                System.out.print("Insira 0 para retornar ao menu: ");
                 voltar = sc.nextInt();
             }
         sc.close();
