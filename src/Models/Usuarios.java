@@ -229,13 +229,14 @@ public class Usuarios {
         System.out.println("PCD? "+getPCD());
         System.out.println("Funcionário? "+getFuncionario());
 
-        System.out.print("Insira 0 para retornar ao menu: ");
+        System.out.print("Insira 'X' para retornar ao menu: ");
         String voltar = sc.next();
-        if(voltar.equals("0")){
+        voltar.toUpperCase();
+        if(voltar.equals("X")){
             System.out.flush();
         }else{
             while(!voltar.equals("0")) {
-                System.out.print("Por favor, insira 0 para retornar ao menu: ");
+                System.out.print("Por favor, insira 'X' para retornar ao menu: ");
                 voltar = sc.next();
             }
         }
@@ -247,30 +248,30 @@ public class Usuarios {
         Scanner sc = new Scanner(System.in);
         DbContext db = new DbContext();
         db.conectarBanco();
-        System.out.println("Tem certeza disso? Esta eh uma acao irreversivel. [S/N]");
+        System.out.println("Tem certeza disso? Esta é uma ação irreversivel. [S/N]");
         String esc = sc.next();
         esc.toUpperCase();
         while(true){
             if(esc.equals("S")){
                 boolean status = db.executarUpdateSql("DELETE FROM public.usuarios WHERE email = ('"+getEmail()+"')");
                 if(status){
-                    System.out.println("Conta excluida com sucesso! Retornando ao Menu Inicial...");
+                    System.out.println("Conta excluída com sucesso! Retornando ao Menu Inicial...");
                     System.out.flush();
                     iniciar();
                     break;
                 }else{
-                    System.out.println("Houve um erro na exclusao da conta. Retornando ao Menu Principal...");
+                    System.out.println("Houve um erro na exclusão da conta. Retornando ao Menu Principal...");
                     System.out.flush();
                     menuPrincipal();
                     break;
                 }
             }else if(esc.equals("N")){
-                System.out.println("Exclusao cancelada, retornando ao Menu Principal...");
+                System.out.println("Exclusão cancelada, retornando ao Menu Principal...");
                 System.out.flush();
                 menuPrincipal();
                 break;
             }else{
-                System.out.print("Por favor, insira uma escolha valida: ");
+                System.out.print("Por favor, insira uma escolha válida [S/N]: ");
                 esc = sc.next();
                 esc.toUpperCase();
             }
@@ -367,6 +368,7 @@ public class Usuarios {
                             e.printStackTrace();
                         }
             }  
+        sc.close();
         }
     }
 

@@ -79,17 +79,16 @@ public class Ocorrencias {
             System.out.println("Erro na inserção no banco de dados!");
         }
         
-        System.out.println("Ocorrência registrada! Insira x para retornar ao Menu Principal");
-        String voltar = sc.next();
-        while(voltar != "x"){    
-            if(voltar.equals("x")){
-                user.menuPrincipal();
-            }else{
-                    System.out.println("Insira x para retornar ao Menu Principal: ");
-                    voltar = sc.next();
-                }
-            }
-            sc.close();
+        String voltar;
+        do {
+        System.out.println("Insira 'X' para retornar ao Menu Principal: ");
+        voltar = sc.next();
+        voltar.toUpperCase();
+        } while (!voltar.equalsIgnoreCase("X"));
+
+        System.out.println("Retornando ao Menu Principal...");
+        user.menuPrincipal();
+        sc.close();
     }
          
     public void exibirOcorrencia() throws SQLException{
