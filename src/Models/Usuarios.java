@@ -201,18 +201,24 @@ public class Usuarios {
 
     private void definirConta(String email) throws SQLException {
         DbContext db = new DbContext();
+        db.conectarBanco();
+        Connection conn = db.connect();
 
-        ResultSet rs = db.executarQuerySql("SELECT nome, idade, email, telefone, idoso, pcd, funcionario FROM public.usuarios WHERE('"+email+"')");
-
-        setNome(rs.getString("nome"));
-        setIdade(rs.getInt("idade"));
-        setEmail(rs.getString("email"));
-        setTelefone(rs.getString("telefone"));
-        setIdoso(rs.getString("idoso"));
-        setPCD(rs.getString("pcd"));
-        setFuncionario(rs.getString("funcionario"));
+        ResultSet rs = db.executarQuerySql("SELECT nome, idade, email, telefone, idoso, pcd, funcionario FROM public.usuarios WHERE email = '" + email + "'");
+    
+        if (rs.next()){ 
+            setNome(rs.getString("nome"));
+            setIdade(rs.getInt("idade"));
+            setEmail(rs.getString("email"));
+            setTelefone(rs.getString("telefone"));
+            setIdoso(rs.getString("idoso"));
+            setPCD(rs.getString("pcd"));
+            setFuncionario(rs.getString("funcionario"));
+        }else {
+            
+        }
     }
-
+    
     private void exibirConta() throws SQLException{
         Scanner sc = new Scanner(System.in);
 
